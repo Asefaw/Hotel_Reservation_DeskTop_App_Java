@@ -9,3 +9,8 @@ to test the application
 3) change the database credential properties within the application
 4) run and test the application
 
+
+
+
+
+Copyright 2016 Asefaw Mekuria
