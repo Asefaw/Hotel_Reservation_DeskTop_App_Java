@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
     private PreparedStatement pst;
     private ResultSet rst;
     private final String db_url = "jdbc:mysql://localhost:3306/hotel";
-    private final String db_user = "root";
-    private final String db_pass = "Abush8739";
+    private final String db_user = "hoteladmin";
+    private final String db_pass = "admin";
     private Connection conn;
 
    public Room() {
