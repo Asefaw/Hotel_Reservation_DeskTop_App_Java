@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
  import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
  
@@ -235,42 +237,31 @@ import javax.swing.JOptionPane;
      return null;
    }
  
- /*
-  public void saveTransaction() throws Exception{
-     
-      String sql = "INSERT INTO transaction(roomNumber,checkInDate,customerID,employeeID,checkOutDate)"
-              + "VALUES(?,?,?,?,?)";
-//       java.sql.Date check_in = new java.sql.Date(this.today.getTime());
-      getConnection();
-          transactionList.forEach((key,value)->{             
-              try {
-                  pst.setInt(1, Integer.parseInt(transactionList.get(key).getroomnumb()));
-                  pst.setDate(2, new java.sql.Date(this.today.getTime()));
-                  pst.setString(3, transactionList.get(key).getCustomerID());
-                  pst.setInt(4,transactionList.get(key).getEmpID());
-                  pst.setDate(5, transactionList.get(key).getCheckOutDate());
-                  pst.execute();
-                  updateRoom(Integer.parseInt(transactionList.get(key).getroomnumb()));
-              } catch (SQLException ex) {
-                  JOptionPane.showMessageDialog(null,ex.toString()+"Error while saving transaction");
-              }
-          });  
-          conn.close();
-  } //end of save transaction
+  // load Guest for Check out
   
-  public void updateRoom(int rN){
-      getConnection();
-      String sql = "UPDATE room SET available=NO WHERE roomNumber = ?";
+  public ResultSet guestCheckOut(String roomNumb, String guestLastName) {
+      this.getConnection();
       try{
-          pst = conn.prepareStatement(sql);
-          pst.setInt(1, rN);
-          pst.executeQuery();
-          conn.close();
+          String sql = ("{? = call checkout(?,?)");
+          stmt = conn.prepareCall(sql);
+          stmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
+          stmt.setString(2, roomNumb);
+          stmt.setString(3, guestLastName);
+          stmt.execute();
+          rst = (ResultSet) stmt.getObject(1);
+          return rst;
+          
       }catch(Exception ex){
-          JOptionPane.showMessageDialog(null, "Error while updating room"+ex.toString());
+          JOptionPane.showMessageDialog(null, "Error while loading Presidential Rooms"+ex.toString());
       }
-      
-  } */ 
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      return null;
+  }
+  
  
   // load presidential rooms
   

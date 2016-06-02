@@ -79,17 +79,17 @@ public class GuestInfo extends javax.swing.JInternalFrame {
     
     //Continue() checks whether all fields have a valid input or not
     public void continueNextPage(){
-        if(this.employeeID.getText().isEmpty()||
-                this.customerID.getText().isEmpty() ||
-                this.roomNumber.getText().isEmpty() ||
-                this.FirstName.getText().isEmpty() ||
-                this.LastName.getText().isEmpty() ||
-                this.phone.getText().isEmpty() ||
-                this.email.getText().isEmpty() ||
-                this.AddressField.getText().isEmpty() ||
-                this.cityField.getText().isEmpty() ||
-                this.state.getSelectedItem().equals("") ||
-                this.ZipCode.getText().isEmpty()
+        if( this.employeeID.getText().isEmpty()||
+            this.customerID.getText().isEmpty() ||
+            this.roomNumber.getText().isEmpty() ||
+            this.FirstName.getText().isEmpty() ||
+            this.LastName.getText().isEmpty() ||
+            this.phone.getText().isEmpty() ||
+            this.email.getText().isEmpty() ||
+            this.AddressField.getText().isEmpty() ||
+            this.cityField.getText().isEmpty() ||
+            this.state.getSelectedItem().equals("") ||
+            this.ZipCode.getText().isEmpty()
            ){
             this.ContinueBtn.setEnabled(false);
         }else{

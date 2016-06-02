@@ -7,7 +7,13 @@ package UserInterface;
 
 import BussinessClass.RoomList;
 import java.awt.Component;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -25,8 +31,20 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
     
     //loads the guest for checkout
     public void loadGuest(){
-        RoomList guest = new RoomList();
-        
+        try {
+            String roomNumb = this.RoomNumberField.getText().trim();
+            String lastName = this.Guestname.getText().trim();
+            RoomList guest = new RoomList();
+            ResultSet guestinfo = guest.guestCheckOut(roomNumb, lastName);
+            if(guestinfo.isBeforeFirst()){
+                this.checkOutTable.setModel(DbUtils.resultSetToTableModel(guestinfo));
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "No Record Found","Erorr",JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckoutScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -54,7 +72,7 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        checkOutTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         Guestname = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
@@ -62,6 +80,7 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
         roomlable = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        checkoutBtn = new javax.swing.JButton();
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(1150, 600));
@@ -136,6 +155,11 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel2.setText("Available Rooms");
 
+        jDesktopPane1.setLayer(jPanel10, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
@@ -169,10 +193,6 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1))
         );
-        jDesktopPane1.setLayer(jPanel10, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
         jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
@@ -195,8 +215,8 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Search for a guet to for check out");
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        checkOutTable.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        checkOutTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -207,13 +227,19 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(checkOutTable);
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton2.setText("Search");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        RoomNumberField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                RoomNumberFieldKeyReleased(evt);
             }
         });
 
@@ -238,7 +264,7 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
                             .addComponent(RoomNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel4)
                     .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,6 +290,21 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
             }
         });
 
+        checkoutBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        checkoutBtn.setText("Check Out");
+        checkoutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkoutBtnActionPerformed(evt);
+            }
+        });
+
+        jDesktopPane2.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(checkoutBtn, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jDesktopPane2Layout = new javax.swing.GroupLayout(jDesktopPane2);
         jDesktopPane2.setLayout(jDesktopPane2Layout);
         jDesktopPane2Layout.setHorizontalGroup(
@@ -278,11 +319,13 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
                     .addGroup(jDesktopPane2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77)
+                        .addGap(51, 51, 51)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
-                        .addComponent(jButton3)))
-                .addContainerGap(294, Short.MAX_VALUE))
+                        .addGroup(jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(checkoutBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(242, Short.MAX_VALUE))
         );
         jDesktopPane2Layout.setVerticalGroup(
             jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -295,14 +338,13 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
                 .addGroup(jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addGroup(jDesktopPane2Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(checkoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(132, 132, 132)
+                        .addComponent(jButton3)))
                 .addGap(18, 18, 18))
         );
-        jDesktopPane2.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane2.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane2.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane2.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane2.setLayer(jButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -329,8 +371,13 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        loadGuest();
+        // validate inputs and process data
+        if (!this.RoomNumberField.getText().isEmpty() || this.Guestname.getText().isEmpty()){  
+            loadGuest();
+        }else{
+            JOptionPane.showMessageDialog(null, "You must provide all Fields","Error",JOptionPane.ERROR_MESSAGE);
+        }
+         
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -341,10 +388,28 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void RoomNumberFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_RoomNumberFieldKeyReleased
+        // Valide input to make sure the room number is an interger value
+        // 
+        try{
+            Integer.parseInt(this.RoomNumberField.getText());
+        }catch(NumberFormatException ex){
+            JOptionPane.showMessageDialog(null, "Invalid Input","Error",JOptionPane.ERROR_MESSAGE);
+            this.RoomNumberField.setText("");
+        }
+    }//GEN-LAST:event_RoomNumberFieldKeyReleased
+
+    private void checkoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutBtnActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_checkoutBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Guestname;
     private javax.swing.JTextField RoomNumberField;
+    private javax.swing.JTable checkOutTable;
+    private javax.swing.JButton checkoutBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -364,7 +429,6 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel10;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable roomTable;
     private javax.swing.JLabel roomlable;
     // End of variables declaration//GEN-END:variables

@@ -56,8 +56,7 @@ public class MainScreenForm extends javax.swing.JFrame {
             if(rst.next()){
                 fname = rst.getString("firstName");
                 lname = rst.getString("lastName");
-                id = rst.getString("ssNumber");
-                 System.out.println(fname+lname+id);
+                id = rst.getString("ssNumber"); 
             }
             this.session.setText(fname+", "+lname+", "+id);
                  
