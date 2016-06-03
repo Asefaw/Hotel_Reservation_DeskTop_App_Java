@@ -17,13 +17,13 @@ import net.proteanit.sql.DbUtils;
 
 /**
  *
- * @author tmeku4692
+ * @author Asefaw
  */
 public class CheckoutScreen extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form CheckoutScreen
-     */
+     */ 
     public CheckoutScreen() {
         initComponents();
         
@@ -372,10 +372,10 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // validate inputs and process data
-        if (!this.RoomNumberField.getText().isEmpty() || this.Guestname.getText().isEmpty()){  
-            loadGuest();
-        }else{
+        if (this.RoomNumberField.getText().isEmpty() || this.Guestname.getText().isEmpty()){  
             JOptionPane.showMessageDialog(null, "You must provide all Fields","Error",JOptionPane.ERROR_MESSAGE);
+        }else{ 
+            loadGuest();
         }
          
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -400,7 +400,24 @@ public class CheckoutScreen extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_RoomNumberFieldKeyReleased
 
     private void checkoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutBtnActionPerformed
-        // TODO add your handling code here:
+        /* finalizing checkout
+        call the updateRoom method passing the room number
+        in order to make the room available for checkin
+        */
+        RoomList room =  new RoomList();
+        int row = this.checkOutTable.getSelectedRow(); // the current guest to be checked out
+        String roomNumb = this.checkOutTable.getValueAt(row, 0).toString(); // the room to be checked out
+        boolean success = room.updateRoom(roomNumb);
+        
+        if (success){ // if checkout is successful close the transaction
+            JOptionPane.showMessageDialog(null, "Checkout Completed Succesfully");
+            Component source = (Component)evt.getSource(); // enables components in checkinscreen before exiting the current screen
+            MainScreenForm Main = (MainScreenForm)SwingUtilities.windowForComponent(source);
+            Main.enableCheckinButton();
+            this.dispose();
+        }
+        
+        
         
     }//GEN-LAST:event_checkoutBtnActionPerformed
 

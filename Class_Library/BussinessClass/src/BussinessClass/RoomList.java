@@ -238,7 +238,7 @@ import javax.swing.JOptionPane;
    }
  
   // load Guest for Check out
-  
+  //retrieve the guest information for checkout
   public ResultSet guestCheckOut(String roomNumb, String guestLastName) {
       this.getConnection();
       try{
@@ -260,8 +260,30 @@ import javax.swing.JOptionPane;
             Logger.getLogger(RoomList.class.getName()).log(Level.SEVERE, null, ex);
         }
       return null;
-  }
+  } // end of guest checkout
   
+  // updating a room after a guest has been checked out 
+  // by seting the availability to "YES"
+  public boolean updateRoom(String roomNumb){
+      this.getConnection();
+      try{
+          String sql = ("{call updateroom(?)");
+          stmt = conn.prepareCall(sql); 
+          stmt.setString(1, roomNumb); 
+          stmt.execute(); 
+          return true;
+          
+      }catch(Exception ex){
+          JOptionPane.showMessageDialog(null, "Error while loading Presidential Rooms"+ex.toString());
+      }
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      return false;
+  } 
+//-------------------- end of update room -------------------------------------- 
  
   // load presidential rooms
   
