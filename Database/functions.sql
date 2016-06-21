@@ -9,7 +9,7 @@
   (
     uname IN employee.userName%type,
     pass  IN employee.password%type
-  )
+  )  
   RETURN types_cursor.ref_cursor
   AS
     room_cursor types_cursor.ref_cursor;
