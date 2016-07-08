@@ -28,7 +28,7 @@ END emp_verify;
 
   CREATE OR REPLACE EDITIONABLE FUNCTION "HOTELADMIN"."GET_ROOM_BY_FLOOR" 
 (
-  FLOOR_NUM IN  room.floor%type
+  FLOOR_NUM IN  room.floor%type 
 ) 
   RETURN types_cursor.ref_cursor
   AS
