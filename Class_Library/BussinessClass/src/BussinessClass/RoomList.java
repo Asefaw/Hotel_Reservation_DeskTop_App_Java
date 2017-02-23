@@ -31,7 +31,7 @@ import javax.swing.JOptionPane;
     private PreparedStatement pst;
     private CallableStatement stmt;
     private ResultSet rst;
-    String db_url = "jdbc:oracle:thin:@localhost:1521:oradb";
+    String db_url = "jdbc:oracle:thin:@localhost:1521:orcl";
       String db_user = "hoteladmin";
       String db_pass = "admin"; 
             

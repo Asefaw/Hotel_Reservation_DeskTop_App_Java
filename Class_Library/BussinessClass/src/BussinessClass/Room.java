@@ -13,9 +13,9 @@ import javax.swing.JOptionPane;
    private double price;
     private PreparedStatement pst;
     private ResultSet rst;
-    private final String db_url = "jdbc:mysql://localhost:3306/hotel";
-    private final String db_user = "hoteladmin";
-    private final String db_pass = "admin";
+    String db_url = "jdbc:oracle:thin:@localhost:1521:orcl";
+      String db_user = "hoteladmin";
+      String db_pass = "admin";
     private Connection conn;
 
    public Room() {

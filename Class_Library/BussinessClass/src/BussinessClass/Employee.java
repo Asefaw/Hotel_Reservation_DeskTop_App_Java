@@ -27,7 +27,7 @@ public class Employee extends Person{
         private PreparedStatement pst;
         private CallableStatement stmt;
         private ResultSet rst;
-        private String db_url = "jdbc:oracle:thin:@localhost:1521:oradb";
+        private String db_url = "jdbc:oracle:thin:@localhost:1521:orcl";
         private String db_user = "hoteladmin";
         private String db_pass = "admin"; 
         private String first_name,last_name, user_name;

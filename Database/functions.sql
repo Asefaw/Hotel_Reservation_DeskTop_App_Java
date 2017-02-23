@@ -1,6 +1,32 @@
 --------------------------------------------------------
---  File created - Monday-April-25-2016   
+--  File created - Wednesday-February-22-2017   
 --------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Function CHECKOUT
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE FUNCTION "HOTELADMIN"."CHECKOUT" 
+(
+  room_numb IN room.roomnumber%type 
+, last_name IN customer.lastname%type 
+) RETURN types_cursor.ref_cursor
+  AS 
+    guest types_cursor.ref_cursor;
+BEGIN
+  OPEN guest for
+    SELECT tr.roomNumber, firstName, lastName, checkinDate,checkoutDate, totalCharge
+    FROM transaction tr
+      INNER JOIN customer cust ON
+        tr.customerid = cust.customerid
+      INNER JOIN ROOM rm ON tr.roomnumber = rm.roomnumber
+    WHERE tr.roomnumber = room_numb AND cust.lastname = last_name
+          AND rm.available = 'NO';
+    
+    RETURN guest;
+  CLOSE guest;
+END CHECKOUT;
+
+/
 --------------------------------------------------------
 --  DDL for Function EMP_VERIFY
 --------------------------------------------------------
@@ -81,22 +107,6 @@ END GET_ROOMS;
 
 /
 --------------------------------------------------------
---  DDL for Function GETEMPLOYEE
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE FUNCTION "HOTELADMIN"."GETEMPLOYEE" 
- RETURN TYPES_CURSOR.REF_CURSOR 
- AS 
-  emp_cursor TYPES_CURSOR.REF_CURSOR; 
-BEGIN
-  open emp_cursor for
-    select *
-    from employee;
-  return emp_cursor;
-END GETEMPLOYEE;
-
-/
---------------------------------------------------------
 --  DDL for Function GET_TAX
 --------------------------------------------------------
 
@@ -110,5 +120,21 @@ BEGIN
     from fee;
   return tax_cursor;
 END GET_TAX;
+
+/
+--------------------------------------------------------
+--  DDL for Function GETEMPLOYEE
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE FUNCTION "HOTELADMIN"."GETEMPLOYEE" 
+ RETURN TYPES_CURSOR.REF_CURSOR 
+ AS 
+  emp_cursor TYPES_CURSOR.REF_CURSOR; 
+BEGIN
+  open emp_cursor for
+    select *
+    from employee;
+  return emp_cursor;
+END GETEMPLOYEE;
 
 /
